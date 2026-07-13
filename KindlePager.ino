@@ -22,11 +22,11 @@
 #include <WiFi.h>
 #include "esp_wifi.h"
 
-HijelHID_BLEKeyboard keyboard("Kindle Page Turner", "DIY Electronics", 100);
+HijelHID_BLEKeyboard keyboard("NLBookPager", "NewLibre.com", 100);
 
 const int NEXT_PIN = 4;
 const int PREV_PIN = 5;
-const int LOCK_SCREEN_PIN = 15;
+const int LOCK_SCREEN_PIN = 8;
 
 const unsigned long DEBOUNCE_MS = 200;
 unsigned long lastNextPress = 0;

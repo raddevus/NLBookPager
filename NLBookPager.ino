@@ -18,9 +18,10 @@
   (Internal pull-ups used, no external resistors needed.)
 */
 
-#include "HijelHID_BLEKeyboard.h"
+#include <HijelHID_BLEKeyboard.h>
 #include <WiFi.h>
 #include "esp_wifi.h"
+#include "esp_pm.h" // Required for power management
 
 HijelHID_BLEKeyboard keyboard("NLBookPager", "NewLibre.com", 100);
 
@@ -41,6 +42,10 @@ void onPairingComplete(bool success) {
 }
 
 void setup() {
+
+  // Lower CPU frequency to 80MHz to save energy (Default is usually 160MHz)
+  setCpuFrequencyMhz(80);
+
   Serial.begin(115200);
 
   pinMode(NEXT_PIN, INPUT_PULLUP);
@@ -77,6 +82,14 @@ void loop() {
       keyboard.tap(KEY_Q, KEY_MOD_LCTRL | KEY_MOD_LGUI);
       lastPrevPress = now;
     }
+
+    // Configure automatic light sleep power management
+    esp_pm_config_esp32c3_t pm_config = {
+        .max_freq_mhz = 80,
+        .min_freq_mhz = 10,   // Downclock as low as 10MHz when idle
+        .light_sleep_enable = true
+    };
+    esp_pm_configure(&pm_config);
   }
 
   delay(20);
